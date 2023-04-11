@@ -44,8 +44,19 @@ def control_light(on):
 
 # Main loop
 while True:
-    data = stream.read(CHUNK)
-    on = process_audio(data)
-    control_light(on)
-    time.sleep(0.02) # Set the loop frequency
+    try:
+        data = stream.read(CHUNK)
+        on = process_audio(data)
+        control_light(on)
+        time.sleep(0.02) # Set the loop frequency
+    except KeyboardInterrupt:
+        print("Exiting...")
+        break
+    except Exception as e:
+        stream = p.open(format=FORMAT,
+                        channels=CHANNELS,
+                        rate=RATE,
+                        input=True,
+                        frames_per_buffer=CHUNK)
+        continue
 
